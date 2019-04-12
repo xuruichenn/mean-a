@@ -50,7 +50,6 @@ function Mean(count, nodeRepo) {
 		for (i = 0; i < this.instance_number; i++) {
 		    //this.app.cluster[i].placeOn({diskSize: node_disk[i]});
 			this.app.cluster[i].placeOn(node_disk[0]);
-			console.log(this.app.cluster[i]);
 			
 		}
 	}

@@ -77,7 +77,6 @@ const mean = new Mean(count, nodeRepository);
 const workload_count = 1;
 const workload = new WorkloadGen(workload_count);
 
-console.log("hi")
 workload.cluster[0].placeOn({diskSize: 16});
 workload.cluster[1].placeOn({diskSize: 16});
 
