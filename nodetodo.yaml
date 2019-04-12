@@ -1,0 +1,92 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mean-app
+  namespace: default
+  labels:
+    appName: mean-app
+spec:
+  ports:
+  - name: http-mean
+    port: 80
+  type: LoadBalancer
+  selector:
+    appName: mean-app
+--- 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mongo
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      appName: mean-app
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        appName: mean-app
+    spec:
+      containers: mongo
+      - name: mean-app
+      imagePullPolicy: Always
+      image: index.docker.io/xuruichen/node-todo:firsttryuwu
+      command: ["/go/bin/mean-a"]
+      env:
+      - name: GET_HOSTS_FROM
+        value: dns
+      ports:
+      - containerPort: 80
+--- 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: node-app
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      appName: mean-app
+  replicas: 4
+  template:
+    metadata:
+      labels:
+        appName: mean-app
+    spec:
+      containers: node-app
+      - name: mean-app
+      imagePullPolicy: Always
+      image: index.docker.io/xuruichen/node-todo:firsttryuwu
+      command: ["/go/bin/mean-a"]
+      env:
+      - name: GET_HOSTS_FROM
+        value: dns
+      ports:
+      - containerPort: 80
+--- 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: haproxy
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      appName: mean-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        appName: mean-app
+    spec:
+      containers: haproxy
+      - name: mean-app
+      imagePullPolicy: Always
+      image: index.docker.io/xuruichen/node-todo:firsttryuwu
+      command: ["/go/bin/mean-a"]
+      env:
+      - name: GET_HOSTS_FROM
+        value: dns
+      ports:
+      - containerPort: 80
